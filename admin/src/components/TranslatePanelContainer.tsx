@@ -1,64 +1,36 @@
 import React from 'react';
 import { TranslatePanel } from './TranslatePanel';
 
-declare global {
-  interface Window {
-    strapi: {
-      unstable_useContentManagerContext?: () => {
-        form: {
-          values: Record<string, any>;
-        };
-        layout: {
-          contentType: {
-            pluginOptions?: {
-              i18n?: {
-                localized: boolean;
-              };
-            };
-          };
-        };
-      };
-      useRBACProvider?: () => {
-        allPermissions: any[];
-      };
-    };
-  }
+// Define types based on Strapi v5 API
+interface PanelComponentProps {
+  activeTab?: string;
+  document?: Record<string, any>;
+  documentId?: string;
+  model?: any;
+  collectionType?: any;
+  meta?: any;
 }
 
-export const TranslatePanelContainer: React.FC = () => {
-  const [contentData, setContentData] = React.useState<Record<string, any>>({});
-  const [currentLocale, setCurrentLocale] = React.useState<string>('en');
+type PanelComponent = (props: PanelComponentProps) => {
+  title: string;
+  content: React.ReactNode;
+};
 
-  React.useEffect(() => {
-    try {
-      if (window.strapi?.unstable_useContentManagerContext) {
-        const context = window.strapi.unstable_useContentManagerContext();
-        const formData = context?.form?.values || {};
-        setContentData(formData);
-        
-        if (formData && typeof formData === 'object' && 'locale' in formData) {
-          setCurrentLocale((formData as any).locale || 'en');
-        }
-      }
-    } catch (error) {
-      console.warn('Could not access content manager context:', error);
-      
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const localeParam = urlParams.get('locale');
-        if (localeParam) {
-          setCurrentLocale(localeParam);
-        }
-      } catch (urlError) {
-        console.warn('Could not parse URL params:', urlError);
-      }
-    }
-  }, []);
+// Create the panel component following Strapi v5 PanelComponent interface
+export const TranslatePanelContainer: PanelComponent = ({
+  document
+}: PanelComponentProps) => {
+  // Extract locale from document data or default to 'en'
+  const currentLocale = (document as any)?.locale || 'en';
+  const contentData = document || {};
 
-  return (
-    <TranslatePanel
-      currentLocale={currentLocale}
-      contentData={contentData}
-    />
-  );
+  return {
+    title: 'AI Translation',
+    content: (
+      <TranslatePanel
+        currentLocale={currentLocale}
+        contentData={contentData}
+      />
+    )
+  };
 };

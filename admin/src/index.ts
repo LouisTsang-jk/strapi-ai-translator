@@ -2,6 +2,7 @@ import { getTranslation } from './utils/getTranslation';
 import { PLUGIN_ID } from './pluginId';
 import { Initializer } from './components/Initializer';
 import { PluginIcon } from './components/PluginIcon';
+import { TranslatePanelContainer } from './components/TranslatePanelContainer';
 
 export default {
   register(app: any) {
@@ -28,7 +29,15 @@ export default {
   },
 
   bootstrap(app: any) {
-    // Plugin bootstrap logic can be added here
+    try {
+      const contentManagerPlugin = app.getPlugin('content-manager');
+      if (contentManagerPlugin && contentManagerPlugin.apis) {
+        // Use the correct Strapi v5 API for adding edit view side panels
+        contentManagerPlugin.apis.addEditViewSidePanel([TranslatePanelContainer]);
+      }
+    } catch (error) {
+      console.warn('Failed to register AI translate panel:', error);
+    }
   },
 
   async registerTrads({ locales }: { locales: string[] }) {

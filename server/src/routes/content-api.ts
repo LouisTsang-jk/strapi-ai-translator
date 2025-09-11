@@ -8,4 +8,12 @@ export default [
       policies: [],
     },
   },
+  {
+    method: 'POST',
+    path: '/translate',
+    handler: 'controller.translate',
+    config: {
+      policies: [],
+    },
+  },
 ];
