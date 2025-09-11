@@ -1,5 +1,12 @@
+import type { Core } from '@strapi/strapi';
 import service from './service';
 
-export default {
+type Services = {
+  service: (context: { strapi: Core.Strapi }) => any;
+};
+
+const services: Services = {
   service,
 };
+
+export default services;

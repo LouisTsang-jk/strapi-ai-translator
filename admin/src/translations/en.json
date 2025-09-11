@@ -1,1 +1,10 @@
-{}
+{
+  "translate.panel.title": "AI Translation",
+  "translate.current-locale": "Current Language:",
+  "translate.subject.label": "Translation Subject",
+  "translate.subject.placeholder": "Enter the subject or context for translation...",
+  "translate.background.label": "Background Context",
+  "translate.background.placeholder": "Provide background information to improve translation quality...",
+  "translate.process.button": "Process Translation",
+  "translate.result.title": "Processing Result"
+}

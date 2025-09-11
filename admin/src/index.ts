@@ -27,6 +27,10 @@ export default {
     });
   },
 
+  bootstrap(app: any) {
+    // Plugin bootstrap logic can be added here
+  },
+
   async registerTrads({ locales }: { locales: string[] }) {
     return Promise.all(
       locales.map(async (locale) => {

@@ -1,3 +1,5 @@
+import type { Core } from '@strapi/strapi';
+
 /**
  * Application methods
  */
@@ -16,7 +18,20 @@ import policies from './policies';
 import routes from './routes';
 import services from './services';
 
-export default {
+interface PluginServerMethods {
+  register: (context: { strapi: Core.Strapi }) => void | Promise<void>;
+  bootstrap: (context: { strapi: Core.Strapi }) => void | Promise<void>;
+  destroy: (context: { strapi: Core.Strapi }) => void | Promise<void>;
+  config: any;
+  controllers: any;
+  routes: any;
+  services: any;
+  contentTypes: any;
+  policies: any;
+  middlewares: any;
+}
+
+const plugin: PluginServerMethods = {
   register,
   bootstrap,
   destroy,
@@ -28,3 +43,5 @@ export default {
   policies,
   middlewares,
 };
+
+export default plugin;

@@ -58,7 +58,7 @@
   },
   "strapi": {
     "kind": "plugin",
-    "name": "strapi-plugin-ai-translate",
+    "name": "ai-translate",
     "displayName": "AI Translate",
     "description": "AI-powered i18n for Strapi – translate content with custom subjects and glossaries in one click."
   },
