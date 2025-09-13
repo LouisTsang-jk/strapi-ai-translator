@@ -32,8 +32,13 @@ export default {
     try {
       const contentManagerPlugin = app.getPlugin('content-manager');
       if (contentManagerPlugin && contentManagerPlugin.apis) {
-        // Use the correct Strapi v5 API for adding edit view side panels
-        contentManagerPlugin.apis.addEditViewSidePanel([TranslatePanelContainer]);
+        contentManagerPlugin.apis.addEditViewSidePanel((panels: any[]) => [
+          ...panels,
+          {
+            name: 'ai-translate-panel',
+            Component: TranslatePanelContainer,
+          },
+        ]);
       }
     } catch (error) {
       console.warn('Failed to register AI translate panel:', error);
