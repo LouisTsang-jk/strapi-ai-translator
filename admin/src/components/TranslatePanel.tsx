@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Box, Button, Typography, Textarea, Field, Divider, SingleSelect, SingleSelectOption, Modal } from '@strapi/design-system';
+import {
+  Box,
+  Button,
+  Typography,
+  Textarea,
+  Field,
+  Divider,
+  SingleSelect,
+  SingleSelectOption,
+  Modal,
+} from '@strapi/design-system';
 
 interface TranslationResult {
   key: string;
@@ -76,31 +86,31 @@ export const TranslatePanel: React.FC<TranslatePanelProps> = ({ currentLocale, c
 
   const handleTranslate = async () => {
     setIsProcessing(true);
-    
+
     try {
       console.log('Content data:', contentData);
-      
+
       // Filter and prepare fields for translation
       const fieldsToTranslate = [];
-      
+
       for (const [key, value] of Object.entries(contentData)) {
         if (isTextOrRichTextField(value, key) && isFieldEmpty(value)) {
           const sourceText = extractTextContent(value);
           if (sourceText) {
             fieldsToTranslate.push({
               key,
-              source: sourceText
+              source: sourceText,
             });
           }
         }
       }
-      
+
       if (fieldsToTranslate.length === 0) {
         console.log('No empty fields to translate');
         setTranslationResults([]);
         return;
       }
-      
+
       // Call the API
       const response = await fetch('/strapi-plugin-ai-translate/translate', {
         method: 'POST',
@@ -114,13 +124,13 @@ export const TranslatePanel: React.FC<TranslatePanelProps> = ({ currentLocale, c
           background,
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       if (data.success && data.results) {
         setTranslationResults(data.results);
         console.log('Translation results:', data.results);
@@ -148,7 +158,7 @@ export const TranslatePanel: React.FC<TranslatePanelProps> = ({ currentLocale, c
       </Box>
 
       <Box marginBottom={3} width="100%">
-        <Field.Root>
+        <Field.Root name="targetLocale">
           <Field.Label>目标语言</Field.Label>
           <SingleSelect value={targetLocale} onChange={setTargetLocale}>
             {LANGUAGE_OPTIONS.map((option) => (
@@ -161,7 +171,7 @@ export const TranslatePanel: React.FC<TranslatePanelProps> = ({ currentLocale, c
       </Box>
 
       <Box width="100%">
-        <Field.Root>
+        <Field.Root name="subject">
           <Field.Label>翻译主题</Field.Label>
           <Textarea
             placeholder="输入翻译的主题或上下文..."
@@ -172,7 +182,7 @@ export const TranslatePanel: React.FC<TranslatePanelProps> = ({ currentLocale, c
       </Box>
 
       <Box marginTop={3} width="100%">
-        <Field.Root>
+        <Field.Root name="background">
           <Field.Label>背景上下文</Field.Label>
           <Textarea
             placeholder="提供背景信息以提高翻译质量..."
@@ -212,21 +222,81 @@ export const TranslatePanel: React.FC<TranslatePanelProps> = ({ currentLocale, c
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                    <th style={{ width: '20%', padding: '12px 8px', textAlign: 'left', fontSize: '14px', fontWeight: 600 }}>字段</th>
-                    <th style={{ width: '40%', padding: '12px 8px', textAlign: 'left', fontSize: '14px', fontWeight: 600 }}>原文</th>
-                    <th style={{ width: '40%', padding: '12px 8px', textAlign: 'left', fontSize: '14px', fontWeight: 600 }}>译文</th>
+                    <th
+                      style={{
+                        width: '20%',
+                        padding: '12px 8px',
+                        textAlign: 'left',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      字段
+                    </th>
+                    <th
+                      style={{
+                        width: '40%',
+                        padding: '12px 8px',
+                        textAlign: 'left',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      原文
+                    </th>
+                    <th
+                      style={{
+                        width: '40%',
+                        padding: '12px 8px',
+                        textAlign: 'left',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      译文
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {translationResults.map((result, index) => (
-                    <tr key={index} style={{ borderBottom: index < translationResults.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
-                      <td style={{ width: '20%', padding: '12px 8px', fontSize: '12px', wordBreak: 'break-word', verticalAlign: 'top' }}>
+                    <tr
+                      key={index}
+                      style={{
+                        borderBottom:
+                          index < translationResults.length - 1 ? '1px solid #f0f0f0' : 'none',
+                      }}
+                    >
+                      <td
+                        style={{
+                          width: '20%',
+                          padding: '12px 8px',
+                          fontSize: '12px',
+                          wordBreak: 'break-word',
+                          verticalAlign: 'top',
+                        }}
+                      >
                         <strong>{result.key}</strong>
                       </td>
-                      <td style={{ width: '40%', padding: '12px 8px', fontSize: '12px', wordBreak: 'break-word', verticalAlign: 'top' }}>
+                      <td
+                        style={{
+                          width: '40%',
+                          padding: '12px 8px',
+                          fontSize: '12px',
+                          wordBreak: 'break-word',
+                          verticalAlign: 'top',
+                        }}
+                      >
                         {result.source}
                       </td>
-                      <td style={{ width: '40%', padding: '12px 8px', fontSize: '12px', wordBreak: 'break-word', verticalAlign: 'top' }}>
+                      <td
+                        style={{
+                          width: '40%',
+                          padding: '12px 8px',
+                          fontSize: '12px',
+                          wordBreak: 'break-word',
+                          verticalAlign: 'top',
+                        }}
+                      >
                         {result.target}
                       </td>
                     </tr>

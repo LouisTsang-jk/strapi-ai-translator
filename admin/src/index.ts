@@ -23,21 +23,23 @@ export default {
       id: PLUGIN_ID,
       initializer: Initializer,
       isReady: false,
-      name: PLUGIN_ID,
+      name: PLUGIN_ID
     });
   },
 
   bootstrap(app: any) {
     try {
       const contentManagerPlugin = app.getPlugin('content-manager');
-      if (contentManagerPlugin && contentManagerPlugin.apis) {
-        contentManagerPlugin.apis.addEditViewSidePanel([
-          {
-            name: 'ai-translate-panel',
+      if (contentManagerPlugin) {
+        const apis = contentManagerPlugin.apis as any;
+        if (apis && apis.addEditViewSidePanel) {
+          const panelComponent = (props: any) => ({
             title: 'AI Translation',
-            Component: TranslatePanelContainer,
-          },
-        ]);
+            content: TranslatePanelContainer(props),
+          });
+          
+          apis.addEditViewSidePanel([panelComponent]);
+        }
       }
     } catch (error) {
       console.warn('Failed to register AI translate panel:', error);
