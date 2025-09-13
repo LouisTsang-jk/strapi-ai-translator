@@ -1,8 +1,9 @@
-import { getTranslation } from './utils/getTranslation';
+// import { getTranslation } from './utils/getTranslation';
 import { PLUGIN_ID } from './pluginId';
 import { Initializer } from './components/Initializer';
 import { PluginIcon } from './components/PluginIcon';
 import { TranslatePanelContainer } from './components/TranslatePanelContainer';
+import { App } from './pages/App';
 
 export default {
   register(app: any) {
@@ -14,8 +15,6 @@ export default {
         defaultMessage: PLUGIN_ID,
       },
       Component: async () => {
-        const { App } = await import('./pages/App');
-
         return App;
       },
     });
@@ -32,10 +31,10 @@ export default {
     try {
       const contentManagerPlugin = app.getPlugin('content-manager');
       if (contentManagerPlugin && contentManagerPlugin.apis) {
-        contentManagerPlugin.apis.addEditViewSidePanel((panels: any[]) => [
-          ...panels,
+        contentManagerPlugin.apis.addEditViewSidePanel([
           {
             name: 'ai-translate-panel',
+            title: 'AI Translation',
             Component: TranslatePanelContainer,
           },
         ]);

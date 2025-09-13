@@ -11,26 +11,22 @@ interface PanelComponentProps {
   meta?: any;
 }
 
-type PanelComponent = (props: PanelComponentProps) => {
-  title: string;
-  content: React.ReactNode;
-};
-
-// Create the panel component following Strapi v5 PanelComponent interface
-export const TranslatePanelContainer: PanelComponent = ({
-  document
-}: PanelComponentProps) => {
+// Create the panel component as a React functional component
+export const TranslatePanelContainer: React.FC<PanelComponentProps> = (props) => {
   // Extract locale from document data or default to 'en'
-  const currentLocale = (document as any)?.locale || 'en';
-  const contentData = document || {};
+  const currentLocale = (props.document as any)?.locale || 'en';
+  const contentData = props.document || {};
 
-  return {
-    title: 'AI Translation',
-    content: (
-      <TranslatePanel
-        currentLocale={currentLocale}
-        contentData={contentData}
-      />
-    )
-  };
+  return (
+    <TranslatePanel
+      currentLocale={currentLocale}
+      contentData={contentData}
+    />
+  );
 };
+
+// Add display properties for Strapi
+TranslatePanelContainer.displayName = 'AI Translation';
+
+// Export as default for compatibility
+export default TranslatePanelContainer;
